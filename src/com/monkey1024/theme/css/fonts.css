@@ -1,0 +1,14 @@
+@font-face {
+    -fx-font-family : 'Roboto Regular';
+    src: url('/com/monkey1024/theme/fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    -fx-font-family : 'Roboto Thin';
+    src: url('/com/monkey1024/theme/fonts/Roboto-Thin.ttf');
+}
+
+@font-face {
+    -fx-font-family : 'Roboto Bold';
+    src: url('/com/monkey1024/theme/fonts/Roboto-Bold.ttf');
+}
