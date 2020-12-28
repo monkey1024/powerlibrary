@@ -1,6 +1,6 @@
 ### 界面
 
-![1](\1.png)
+![1](https://github.com/monkey1024/powerlibrary/raw/master/1.png)
 
 ### 使用技术
 
