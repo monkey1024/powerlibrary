@@ -55,7 +55,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Admin{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +

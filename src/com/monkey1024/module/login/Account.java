@@ -20,8 +20,8 @@ import animatefx.animation.*;
 import com.monkey1024.App;
 import com.gn.GNAvatarView;
 import com.monkey1024.global.Section;
-import com.monkey1024.global.User;
-import com.monkey1024.global.UserDetail;
+import com.monkey1024.global.Admin;
+import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.global.plugin.SectionManager;
 import com.monkey1024.global.plugin.UserManager;
@@ -130,23 +130,23 @@ public class Account implements Initializable {
             Section section = new Section(true, username.getText());
             SectionManager.save(section);
 
-            User user = new User(username.getText(), fullname.getText(), email.getText(), password.getText());
-            UserManager.save(user);
+            Admin admin = new Admin(username.getText(), fullname.getText(), email.getText(), password.getText());
+            UserManager.save(admin);
 
-            UserDetail detail = App.getUserDetail();
-            detail.setText(user.getFullName());
-            detail.setHeader(user.getUserName());
+            AdminDetail detail = App.getAdminDetail();
+            detail.setText(admin.getFullName());
+            detail.setHeader(admin.getUserName());
 
             App.decorator.addCustom(detail);
             detail.setProfileAction(event -> {
-                App.getUserDetail().getPopOver().hide();
+                App.getAdminDetail().getPopOver().hide();
                 Main.ctrl.title.setText("Profile");
                 Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
 
             });
 
             detail.setSignAction(event -> {
-                    App.getUserDetail().getPopOver().hide();
+                    App.getAdminDetail().getPopOver().hide();
                     SectionManager.save(new Section(false, ""));
 
                     this.password.setText("");

@@ -22,8 +22,8 @@ import animatefx.animation.SlideInLeft;
 import com.monkey1024.App;
 import com.gn.GNAvatarView;
 import com.monkey1024.global.Section;
-import com.monkey1024.global.User;
-import com.monkey1024.global.UserDetail;
+import com.monkey1024.global.Admin;
+import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.global.plugin.SectionManager;
 import com.monkey1024.global.plugin.UserManager;
@@ -156,9 +156,9 @@ public class login implements Initializable {
 
     private void enter() {
 
-        User user = UserManager.get(username.getText());
+        Admin admin = UserManager.get(username.getText());
 
-        if(user.getUserName().equals(this.username.getText()) && user.getPassword().equals(this.password.getText())){
+        if(admin.getUserName().equals(this.username.getText()) && admin.getPassword().equals(this.password.getText())){
             Section section = new Section();
             section.setLogged(true);
             section.setUserLogged(this.username.getText());
@@ -166,26 +166,26 @@ public class login implements Initializable {
 
             App.decorator.setContent(ViewManager.getInstance().get("main"));
 
-            UserDetail detail = App.getUserDetail();
-            detail.setText(user.getFullName());
-            detail.setHeader(user.getUserName());
+            AdminDetail detail = App.getAdminDetail();
+            detail.setText(admin.getFullName());
+            detail.setHeader(admin.getUserName());
 
-            App.decorator.addCustom(App.getUserDetail());
+            App.decorator.addCustom(App.getAdminDetail());
 
-            App.getUserDetail().setProfileAction(event -> {
-                App.getUserDetail().getPopOver().hide();
+            App.getAdminDetail().setProfileAction(event -> {
+                App.getAdminDetail().getPopOver().hide();
                 Main.ctrl.title.setText("Profile");
                 Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
             });
 
-            App.getUserDetail().setSignAction(event -> {
-                App.getUserDetail().getPopOver().hide();
+            App.getAdminDetail().setSignAction(event -> {
+                App.getAdminDetail().getPopOver().hide();
                 App.decorator.setContent(ViewManager.getInstance().get("login"));
                 this.username.setText("");
                 this.password.setText("");
                 if(Main.popConfig.isShowing()) Main.popConfig.hide();
                 if(Main.popup.isShowing()) Main.popup.hide();
-                App.decorator.removeCustom(App.getUserDetail());
+                App.decorator.removeCustom(App.getAdminDetail());
             });
 
             TimerTask timerTask = new TimerTask() {

@@ -17,9 +17,9 @@
 
 package com.monkey1024;
 
+import com.monkey1024.global.Admin;
 import com.monkey1024.global.Section;
-import com.monkey1024.global.User;
-import com.monkey1024.global.UserDetail;
+import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.SectionManager;
 import com.monkey1024.global.plugin.UserManager;
 import com.monkey1024.global.plugin.ViewManager;
@@ -55,17 +55,17 @@ public class App extends Application {
     private float  increment = 0;
     private float  progress = 0;
     private Section section;
-    private User user;
+    private Admin admin;
 
     @Override
     public synchronized void init(){
         section = SectionManager.get();
 
         if(section.isLogged()){
-            user = UserManager.get(section.getUserLogged());
-            userDetail = new UserDetail(section.getUserLogged(), user.getFullName(), "subtitle");
+            admin = UserManager.get(section.getUserLogged());
+            adminDetail = new AdminDetail(section.getUserLogged(), admin.getFullName(), "subtitle");
         } else {
-            userDetail = new UserDetail();
+            adminDetail = new AdminDetail();
         }
 
         float total = 43; // the difference represents the views not loaded
@@ -112,7 +112,7 @@ public class App extends Application {
 
     public static ObservableList<String>    stylesheets;
     public static HostServices              hostServices;
-    private static UserDetail userDetail = null;
+    private static AdminDetail adminDetail = null;
 
     public static GNDecorator getDecorator(){
         return decorator;
@@ -136,27 +136,27 @@ public class App extends Application {
         if (log.equals("account") || log.equals("login")) {
             decorator.setContent(ViewManager.getInstance().get(log));
         } else {
-            App.decorator.addCustom(userDetail);
-            userDetail.setProfileAction(event -> {
+            App.decorator.addCustom(adminDetail);
+            adminDetail.setProfileAction(event -> {
                 Main.ctrl.title.setText("Profile");
                 Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
-                userDetail.getPopOver().hide();
+                adminDetail.getPopOver().hide();
             });
 
-            userDetail.setSignAction(event -> {
+            adminDetail.setSignAction(event -> {
                 App.decorator.setContent(ViewManager.getInstance().get("login"));
                 section.setLogged(false);
                 SectionManager.save(section);
-                userDetail.getPopOver().hide();
+                adminDetail.getPopOver().hide();
                 if(Main.popConfig.isShowing()) Main.popConfig.hide();
                 if(Main.popup.isShowing()) Main.popup.hide();
-                App.decorator.removeCustom(userDetail);
+                App.decorator.removeCustom(adminDetail);
             });
             decorator.setContent(ViewManager.getInstance().get("main"));
         }
 
         decorator.getStage().setOnCloseRequest(event -> {
-            App.getUserDetail().getPopOver().hide();
+            App.getAdminDetail().getPopOver().hide();
             if(Main.popConfig.isShowing()) Main.popConfig.hide();
             if(Main.popup.isShowing()) Main.popup.hide();
             Platform.exit();
@@ -228,7 +228,7 @@ public class App extends Application {
                 properties.store(fileOutputStream, "Dashboard properties");
 
 
-                File directory = new File("user/");
+                File directory = new File("admin/");
                 properties.load(fileInputStream);
                 if(directory.exists()){
                     if(properties.getProperty("logged").equals("false"))
@@ -244,7 +244,7 @@ public class App extends Application {
         return null;
     }
 
-    public static UserDetail getUserDetail() {
-        return userDetail;
+    public static AdminDetail getAdminDetail() {
+        return adminDetail;
     }
 }

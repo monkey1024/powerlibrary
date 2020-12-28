@@ -1,19 +1,3 @@
-/*
- * Copyright (C) Gleidson Neves da Silveira
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.monkey1024.global;
 
 import com.gn.GNAvatarView;
@@ -36,12 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import org.controlsfx.control.PopOver;
 
-/**
- * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
- * Create on  19/10/2018
- * Version 2.0
- */
-public class UserDetail extends GNControl {
+public class AdminDetail extends GNControl {
 
     private         String  name;
     public static   PopOver root;
@@ -52,9 +31,9 @@ public class UserDetail extends GNControl {
 
     private StringProperty header = new SimpleStringProperty();
 
-    public UserDetail(){
+    public AdminDetail(){
         super("", "");
-        UserDetail.root = popOver;
+        AdminDetail.root = popOver;
         popOver.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         popOver.setArrowIndent(0);
         popOver.setArrowSize(0);
@@ -62,10 +41,10 @@ public class UserDetail extends GNControl {
         popOver.setContentNode(configLayout());
     }
 
-    public UserDetail(String name, String text, String subtitle) {
+    public AdminDetail(String name, String text, String subtitle) {
         super(text, subtitle);
         this.headerProperty().set(name);
-        UserDetail.root = popOver;
+        AdminDetail.root = popOver;
         popOver.setArrowLocation(PopOver.ArrowLocation.TOP_CENTER);
         popOver.setArrowIndent(0);
         popOver.setArrowSize(0);

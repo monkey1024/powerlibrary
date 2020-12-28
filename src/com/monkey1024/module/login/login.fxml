@@ -97,7 +97,7 @@
                                     <HBox alignment="CENTER" prefHeight="17.0" prefWidth="289.0">
                                        <children>
                                           <Label text="Forgot your name of the" />
-                                          <Hyperlink text="user / password" />
+                                          <Hyperlink text="admin / password" />
                                        </children>
                                     </HBox>
                                  </children>

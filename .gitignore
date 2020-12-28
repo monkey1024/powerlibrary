@@ -1,7 +1,7 @@
 ./gitignore
 .idea/**
 /out/**
-/user/**
+/admin/**
 annotation.txt
 scenicView.properties
 dashboard.properties
