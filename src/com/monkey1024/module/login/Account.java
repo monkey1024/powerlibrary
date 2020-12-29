@@ -20,11 +20,11 @@ import animatefx.animation.*;
 import com.monkey1024.App;
 import com.gn.GNAvatarView;
 import com.monkey1024.global.Section;
-import com.monkey1024.global.Admin;
+import com.monkey1024.bean.Admin;
 import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.UserManager;
+import com.monkey1024.global.plugin.AdminManager;
 import com.monkey1024.global.util.Mask;
 import com.monkey1024.module.main.Main;
 import javafx.animation.RotateTransition;
@@ -43,26 +43,19 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
- * Create on  22/11/2018
+ * зЂВс
  */
 public class Account implements Initializable {
 
     @FXML private GNAvatarView avatar;
 
-    @FXML private HBox box_fullname;
     @FXML private HBox box_username;
-    @FXML private HBox box_email;
     @FXML private HBox box_password;
 
-    @FXML private TextField fullname;
     @FXML private TextField username;
-    @FXML private TextField email;
     @FXML private TextField password;
 
     @FXML private Label lbl_password;
-    @FXML private Label lbl_fullname;
-    @FXML private Label lbl_email;
     @FXML private Label lbl_username;
 
     @FXML private Label lbl_error;
@@ -79,12 +72,9 @@ public class Account implements Initializable {
         rotateTransition.setDuration(Duration.seconds(1));
         rotateTransition.setAutoReverse(true);
 
-        addEffect(email);
-        addEffect(fullname);
         addEffect(username);
         addEffect(password);
 
-        Mask.nameField(fullname);
         Mask.noInitSpace(username);
         Mask.noSpaces(username);
         setupListeners();
@@ -96,7 +86,7 @@ public class Account implements Initializable {
         pulse.setDelay(Duration.millis(20));
         pulse.play();
 
-        if (validEmail() && validFullName() && validFullName() && validUsername() && validPassword()) {
+        if (validUsername() && validPassword()) {
 
             String user = username.getText();
             String extension = "properties";
@@ -116,10 +106,6 @@ public class Account implements Initializable {
             }
         } else if (!validUsername()){
             lbl_username.setVisible(true);
-        } else if (!validFullName()) {
-            lbl_fullname.setVisible(true);
-        } else if (!validEmail()){
-            lbl_email.setVisible(true);
         } else {
             lbl_password.setVisible(true);
         }
@@ -130,11 +116,10 @@ public class Account implements Initializable {
             Section section = new Section(true, username.getText());
             SectionManager.save(section);
 
-            Admin admin = new Admin(username.getText(), fullname.getText(), email.getText(), password.getText());
-            UserManager.save(admin);
+            Admin admin = new Admin(username.getText(), password.getText());
+            AdminManager.save(admin);
 
             AdminDetail detail = App.getAdminDetail();
-            detail.setText(admin.getFullName());
             detail.setHeader(admin.getUserName());
 
             App.decorator.addCustom(detail);
@@ -150,8 +135,6 @@ public class Account implements Initializable {
                     SectionManager.save(new Section(false, ""));
 
                     this.password.setText("");
-                    this.email.setText("");
-                    this.fullname.setText("");
                     this.username.setText("");
 
                     App.decorator.setContent(ViewManager.getInstance().get("login"));
@@ -192,15 +175,6 @@ public class Account implements Initializable {
         return !username.getText().isEmpty() && username.getLength() > 3 ;
     }
 
-    private boolean validFullName(){
-        return !fullname.getText().isEmpty() && fullname.getLength() > 3 ;
-    }
-
-    private boolean validEmail(){
-        return Mask.isEmail(email);
-    }
-
-
     private void setupListeners(){
         password.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(!validPassword()){
@@ -236,38 +210,6 @@ public class Account implements Initializable {
             }
         });
 
-        email.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!validEmail()){
-                if(!newValue){
-                    Flash swing = new Flash(box_email);
-                    lbl_email.setVisible(true);
-                    new SlideInLeft(lbl_email).play();
-                    swing.setDelay(Duration.millis(100));
-                    swing.play();
-                    box_email.setStyle("-icon-color : -danger; -fx-border-color : -danger");
-                } else {
-                    lbl_email.setVisible(false);
-                }
-            }  else {
-                lbl_error.setVisible(false);
-            }
-        });
 
-        fullname.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!validFullName()){
-                if(!newValue){
-                    Flash swing = new Flash(box_fullname);
-                    lbl_fullname.setVisible(true);
-                    new SlideInLeft(lbl_fullname).play();
-                    swing.setDelay(Duration.millis(100));
-                    swing.play();
-                    box_fullname.setStyle("-icon-color : -danger; -fx-border-color : -danger");
-                } else {
-                    lbl_fullname.setVisible(false);
-                }
-            } else {
-                lbl_error.setVisible(false);
-            }
-        });
     }
 }

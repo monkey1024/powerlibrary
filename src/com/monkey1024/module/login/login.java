@@ -1,35 +1,19 @@
-/*
- * Copyright (C) Gleidson Neves da Silveira
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+
 package com.monkey1024.module.login;
 
 import animatefx.animation.Flash;
 import animatefx.animation.Pulse;
 import animatefx.animation.SlideInLeft;
-import com.monkey1024.App;
 import com.gn.GNAvatarView;
-import com.monkey1024.global.Section;
-import com.monkey1024.global.Admin;
+import com.monkey1024.App;
+import com.monkey1024.bean.Admin;
 import com.monkey1024.global.AdminDetail;
-import com.monkey1024.global.plugin.ViewManager;
+import com.monkey1024.global.Section;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.UserManager;
+import com.monkey1024.global.plugin.AdminManager;
+import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.module.main.Main;
 import javafx.animation.RotateTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -42,13 +26,9 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 
-/**
- * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
- * Create on  22/11/2018
- * Version 1.0.2
+/*
+    ¹ÜÀíÔ±µÇÂ¼
  */
 public class login implements Initializable {
 
@@ -156,7 +136,7 @@ public class login implements Initializable {
 
     private void enter() {
 
-        Admin admin = UserManager.get(username.getText());
+        Admin admin = AdminManager.get(username.getText());
 
         if(admin.getUserName().equals(this.username.getText()) && admin.getPassword().equals(this.password.getText())){
             Section section = new Section();
@@ -167,7 +147,6 @@ public class login implements Initializable {
             App.decorator.setContent(ViewManager.getInstance().get("main"));
 
             AdminDetail detail = App.getAdminDetail();
-            detail.setText(admin.getFullName());
             detail.setHeader(admin.getUserName());
 
             App.decorator.addCustom(App.getAdminDetail());
@@ -187,25 +166,6 @@ public class login implements Initializable {
                 if(Main.popup.isShowing()) Main.popup.hide();
                 App.decorator.removeCustom(App.getAdminDetail());
             });
-
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    Platform.runLater(()-> {
-                        // add notification in later
-    //                                    TrayNotification tray = new TrayNotification();
-    //                                    tray.setNotificationType(NotificationType.NOTICE);
-    //                                    tray.setRectangleFill(Color.web(""));
-    //                                    tray.setTitle("Welcome!");
-    //                                    tray.setMessage("Welcome back " + username);
-    //                                    tray.showAndDismiss(Duration.millis(10000));
-                        }
-                    );
-                }
-            };
-
-            Timer timer = new Timer();
-            timer.schedule(timerTask, 300);
 
         } else {
             lbl_error.setVisible(true);

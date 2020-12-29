@@ -17,11 +17,11 @@
 
 package com.monkey1024;
 
-import com.monkey1024.global.Admin;
+import com.monkey1024.bean.Admin;
 import com.monkey1024.global.Section;
 import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.UserManager;
+import com.monkey1024.global.plugin.AdminManager;
 import com.monkey1024.global.plugin.ViewManager;
 import com.gn.decorator.GNDecorator;
 import com.gn.decorator.options.ButtonType;
@@ -38,11 +38,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * Init the app class.
@@ -62,8 +58,8 @@ public class App extends Application {
         section = SectionManager.get();
 
         if(section.isLogged()){
-            admin = UserManager.get(section.getUserLogged());
-            adminDetail = new AdminDetail(section.getUserLogged(), admin.getFullName(), "subtitle");
+            admin = AdminManager.get(section.getUserLogged());
+            adminDetail = new AdminDetail(section.getUserLogged(), admin.getUserName(), "subtitle");
         } else {
             adminDetail = new AdminDetail();
         }
@@ -131,28 +127,10 @@ public class App extends Application {
 //        decorator.fullBody();
 
         String log = logged();
-        assert log != null;
+
         //decorator.setContent(ViewManager.getInstance().get("login"));
         if (log.equals("account") || log.equals("login")) {
             decorator.setContent(ViewManager.getInstance().get(log));
-        } else {
-            App.decorator.addCustom(adminDetail);
-            adminDetail.setProfileAction(event -> {
-                Main.ctrl.title.setText("Profile");
-                Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
-                adminDetail.getPopOver().hide();
-            });
-
-            adminDetail.setSignAction(event -> {
-                App.decorator.setContent(ViewManager.getInstance().get("login"));
-                section.setLogged(false);
-                SectionManager.save(section);
-                adminDetail.getPopOver().hide();
-                if(Main.popConfig.isShowing()) Main.popConfig.hide();
-                if(Main.popup.isShowing()) Main.popup.hide();
-                App.decorator.removeCustom(adminDetail);
-            });
-            decorator.setContent(ViewManager.getInstance().get("main"));
         }
 
         decorator.getStage().setOnCloseRequest(event -> {
@@ -211,37 +189,9 @@ public class App extends Application {
         LauncherImpl.notifyPreloader(this, new Preloader.ProgressNotification(progress));
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private String logged(){
-        try {
-            File file = new File("dashboard.properties");
-            Properties properties = new Properties();
 
-            if(!file.exists()){
-                file.createNewFile();
-                return "account";
-            } else {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                properties.load(fileInputStream);
-                properties.putIfAbsent("logged", "false");
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                properties.store(fileOutputStream, "Dashboard properties");
-
-
-                File directory = new File("admin/");
-                properties.load(fileInputStream);
-                if(directory.exists()){
-                    if(properties.getProperty("logged").equals("false"))
-                        return "login";
-                    else
-                        return "main";
-                } else
-                    return "account";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return "login";
     }
 
     public static AdminDetail getAdminDetail() {

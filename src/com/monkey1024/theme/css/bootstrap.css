@@ -380,11 +380,11 @@
 *************************************************************************************/
 
 .clearable-field{
-    -fx-skin: "com.gn.theme.skin.ClearableSkin";
+    -fx-skin: "com.monkey1024.theme.skin.ClearableSkin";
 }
 
 .viewer-field{
-    -fx-skin: "com.gn.theme.skin.ViewerSkin";
+    -fx-skin: "com.monkey1024.theme.skin.ViewerSkin";
 }
 
 .text-field .action-button {
