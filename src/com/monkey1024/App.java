@@ -21,12 +21,13 @@ import com.monkey1024.bean.Admin;
 import com.monkey1024.global.Section;
 import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.AdminManager;
+import com.monkey1024.service.AdminService;
 import com.monkey1024.global.plugin.ViewManager;
 import com.gn.decorator.GNDecorator;
 import com.gn.decorator.options.ButtonType;
 import com.monkey1024.module.loader.Loader;
 import com.monkey1024.module.main.Main;
+import com.monkey1024.service.impl.AdminServiceImpl;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.HostServices;
@@ -57,8 +58,10 @@ public class App extends Application {
     public synchronized void init(){
         section = SectionManager.get();
 
+        AdminService adminService = new AdminServiceImpl();
+
         if(section.isLogged()){
-            admin = AdminManager.get(section.getUserLogged());
+            admin = adminService.get(section.getUserLogged());
             adminDetail = new AdminDetail(section.getUserLogged(), admin.getUserName(), "subtitle");
         } else {
             adminDetail = new AdminDetail();

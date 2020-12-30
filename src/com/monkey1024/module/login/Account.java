@@ -1,19 +1,3 @@
-/*
- * Copyright (C) Gleidson Neves da Silveira
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.monkey1024.module.login;
 
 import animatefx.animation.*;
@@ -24,9 +8,10 @@ import com.monkey1024.bean.Admin;
 import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.AdminManager;
+import com.monkey1024.service.AdminService;
 import com.monkey1024.global.util.Mask;
 import com.monkey1024.module.main.Main;
+import com.monkey1024.service.impl.AdminServiceImpl;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,20 +32,29 @@ import java.util.ResourceBundle;
  */
 public class Account implements Initializable {
 
-    @FXML private GNAvatarView avatar;
+    @FXML
+    private GNAvatarView avatar;
 
-    @FXML private HBox box_username;
-    @FXML private HBox box_password;
+    @FXML
+    private HBox box_username;
+    @FXML
+    private HBox box_password;
 
-    @FXML private TextField username;
-    @FXML private TextField password;
+    @FXML
+    private TextField username;
+    @FXML
+    private TextField password;
 
-    @FXML private Label lbl_password;
-    @FXML private Label lbl_username;
+    @FXML
+    private Label lbl_password;
+    @FXML
+    private Label lbl_username;
 
-    @FXML private Label lbl_error;
+    @FXML
+    private Label lbl_error;
 
-    @FXML private Button register;
+    @FXML
+    private Button register;
 
     private RotateTransition rotateTransition = new RotateTransition();
 
@@ -104,53 +98,55 @@ public class Account implements Initializable {
             } else {
                 lbl_error.setVisible(true);
             }
-        } else if (!validUsername()){
+        } else if (!validUsername()) {
             lbl_username.setVisible(true);
         } else {
             lbl_password.setVisible(true);
         }
     }
 
-    private void setProperties(){
+    private void setProperties() {
 
-            Section section = new Section(true, username.getText());
-            SectionManager.save(section);
+        AdminService adminService = new AdminServiceImpl();
 
-            Admin admin = new Admin(username.getText(), password.getText());
-            AdminManager.save(admin);
+        Section section = new Section(true, username.getText());
+        SectionManager.save(section);
 
-            AdminDetail detail = App.getAdminDetail();
-            detail.setHeader(admin.getUserName());
+        Admin admin = new Admin(username.getText(), password.getText());
+        adminService.save(admin);
 
-            App.decorator.addCustom(detail);
-            detail.setProfileAction(event -> {
-                App.getAdminDetail().getPopOver().hide();
-                Main.ctrl.title.setText("Profile");
-                Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
+        AdminDetail detail = App.getAdminDetail();
+        detail.setHeader(admin.getUserName());
 
-            });
+        App.decorator.addCustom(detail);
+        detail.setProfileAction(event -> {
+            App.getAdminDetail().getPopOver().hide();
+            Main.ctrl.title.setText("Profile");
+            Main.ctrl.body.setContent(ViewManager.getInstance().get("profile"));
 
-            detail.setSignAction(event -> {
-                    App.getAdminDetail().getPopOver().hide();
-                    SectionManager.save(new Section(false, ""));
+        });
 
-                    this.password.setText("");
-                    this.username.setText("");
+        detail.setSignAction(event -> {
+            App.getAdminDetail().getPopOver().hide();
+            SectionManager.save(new Section(false, ""));
 
-                    App.decorator.setContent(ViewManager.getInstance().get("login"));
+            this.password.setText("");
+            this.username.setText("");
 
-                    App.decorator.removeCustom(detail);
-            });
+            App.decorator.setContent(ViewManager.getInstance().get("login"));
 
-            App.decorator.setContent(ViewManager.getInstance().get("main"));
+            App.decorator.removeCustom(detail);
+        });
+
+        App.decorator.setContent(ViewManager.getInstance().get("main"));
     }
 
     @FXML
-    private void back(){
+    private void back() {
         App.decorator.setContent(ViewManager.getInstance().get("login"));
     }
 
-    private void addEffect(Node node){
+    private void addEffect(Node node) {
         node.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             rotateTransition.play();
             Pulse pulse = new Pulse(node.getParent());
@@ -161,24 +157,24 @@ public class Account implements Initializable {
         });
 
         node.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!node.isFocused())
-            node.getParent().setStyle("-icon-color : -dark-gray; -fx-border-color : transparent");
+            if (!node.isFocused())
+                node.getParent().setStyle("-icon-color : -dark-gray; -fx-border-color : transparent");
             else node.getParent().setStyle("-icon-color : -success; -fx-border-color : -success");
         });
     }
 
-    private boolean validPassword(){
-        return !password.getText().isEmpty() && password.getLength() > 3 ;
+    private boolean validPassword() {
+        return !password.getText().isEmpty() && password.getLength() > 3;
     }
 
-    private boolean validUsername(){
-        return !username.getText().isEmpty() && username.getLength() > 3 ;
+    private boolean validUsername() {
+        return !username.getText().isEmpty() && username.getLength() > 3;
     }
 
-    private void setupListeners(){
+    private void setupListeners() {
         password.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!validPassword()){
-                if(!newValue){
+            if (!validPassword()) {
+                if (!newValue) {
                     Flash swing = new Flash(box_password);
                     lbl_password.setVisible(true);
                     new SlideInLeft(lbl_password).play();
@@ -194,8 +190,8 @@ public class Account implements Initializable {
         });
 
         username.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!validUsername()){
-                if(!newValue){
+            if (!validUsername()) {
+                if (!newValue) {
                     Flash swing = new Flash(box_username);
                     lbl_username.setVisible(true);
                     new SlideInLeft(lbl_username).play();

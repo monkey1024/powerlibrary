@@ -10,9 +10,10 @@ import com.monkey1024.bean.Admin;
 import com.monkey1024.global.AdminDetail;
 import com.monkey1024.global.Section;
 import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.global.plugin.AdminManager;
+import com.monkey1024.service.AdminService;
 import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.module.main.Main;
+import com.monkey1024.service.impl.AdminServiceImpl;
 import javafx.animation.RotateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -113,14 +114,24 @@ public class login implements Initializable {
         });
     }
 
+    /*
+        校验密码
+     */
     private boolean validPassword(){
         return !password.getText().isEmpty() && password.getLength() > 3;
     }
 
+    /*
+        校验用户名
+     */
     private boolean validUsername(){
         return !username.getText().isEmpty() && username.getLength() > 3;
     }
 
+
+    /*
+        登录
+     */
     @FXML
     private void loginAction(){
         Pulse pulse = new Pulse(login);
@@ -134,10 +145,12 @@ public class login implements Initializable {
         }
     }
 
+
     private void enter() {
+        AdminService adminService = new AdminServiceImpl();
+        Admin admin = adminService.get(username.getText());
 
-        Admin admin = AdminManager.get(username.getText());
-
+        //检查是否输入了正确的用户名和密码
         if(admin.getUserName().equals(this.username.getText()) && admin.getPassword().equals(this.password.getText())){
             Section section = new Section();
             section.setLogged(true);

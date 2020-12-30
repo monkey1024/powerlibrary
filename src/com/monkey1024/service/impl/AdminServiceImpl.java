@@ -1,7 +1,7 @@
-
-package com.monkey1024.global.plugin;
+package com.monkey1024.service.impl;
 
 import com.monkey1024.bean.Admin;
+import com.monkey1024.service.AdminService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
-    管理员注册和登录
+ * 管理员注册和登录
  */
-public class AdminManager {
+public class AdminServiceImpl implements AdminService {
 
     /*
         根据用户名获取用户数据
      */
-    public static Admin get(String name){
+    public Admin get(String name) {
         try {
             File file = new File("admin/" + name + ".properties");
             Properties properties = new Properties();
@@ -28,7 +28,7 @@ public class AdminManager {
             admin.setUserName(name);
             admin.setPassword(properties.getProperty("password"));
             return admin;
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -37,7 +37,7 @@ public class AdminManager {
     /*
         保存用户
      */
-    public static void save(Admin admin) {
+    public void save(Admin admin) {
         try {
             File file = new File("admin/" + admin.getUserName() + ".properties");
             Properties properties = new Properties();
@@ -50,9 +50,8 @@ public class AdminManager {
             properties.setProperty("password", admin.getPassword());
             properties.store(outputStream, "Update Section");
             properties.clear();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
