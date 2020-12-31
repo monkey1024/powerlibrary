@@ -25,22 +25,18 @@
                                   <Label GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="30.0" prefWidth="60.0" style="-fx-text-fill: -text-color;" text="出版社:" />
                                   <TextField fx:id="publisherField" GridPane.columnIndex="1" GridPane.rowIndex="3" prefHeight="30.0" prefWidth="151.0" promptText="出版社" styleClass="rectangle" />
                                   <Label GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="30.0" prefWidth="60.0" style="-fx-text-fill: -text-color;" text="类型:" />
-                                  <ComboBox fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="4" prefHeight="30.0" prefWidth="179.0" promptText="计算机">
+                                  <ComboBox fx:id="typeField" GridPane.columnIndex="1" GridPane.rowIndex="4" prefHeight="30.0" prefWidth="179.0" >
                                       <items>
-                                          <FXCollections fx:factory="observableArrayList">
+                                          <FXCollections fx:factory="observableArrayList" >
                                               <String fx:value="计算机" />
                                               <String fx:value="文学" />
                                               <String fx:value="经济" />
                                               <String fx:value="管理" />
                                           </FXCollections>
                                       </items>
-                                      <contextMenu>
-                                          <ContextMenu>
-                                              <items>
-                                                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                              </items>
-                                          </ContextMenu>
-                                      </contextMenu>
+                                      <value>
+                                          <String fx:value="计算机"/>
+                                      </value>
                                   </ComboBox>
                               </children>
                           </GridPane>
