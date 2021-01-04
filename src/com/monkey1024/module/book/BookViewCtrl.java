@@ -5,6 +5,8 @@ import com.gn.App;
 import com.monkey1024.bean.Book;
 import com.monkey1024.bean.Constant;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.BookService;
+import com.monkey1024.service.impl.BookServiceImpl;
 import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +27,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -59,12 +62,15 @@ public class BookViewCtrl implements Initializable {
 
     ObservableList<Book> books = FXCollections.observableArrayList();
 
+    private BookService bookService = new BookServiceImpl();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //查询图书
+        List<Book> bookList = bookService.select(null);
 
-        books.add(new Book(1, "java实战入门", "张三", Constant.TYPE_COMPUTER, "12-987", "XX出版社", Constant.STATUS_STORAGE));
-        books.add(new Book(2, "编程之道", "李四", Constant.TYPE_COMPUTER, "1245-987", "XX出版社", Constant.STATUS_STORAGE));
-        books.add(new Book(3, "颈椎病康复指南", "王五", Constant.TYPE_COMPUTER, "08712-987", "XX出版社", Constant.STATUS_STORAGE));
+        books.addAll(bookList);
+
         c1.setCellValueFactory(new PropertyValueFactory<>("id"));
         c2.setCellValueFactory(new PropertyValueFactory<>("bookName"));
         c3.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -117,21 +123,12 @@ public class BookViewCtrl implements Initializable {
     private void bookSelect(){
         String bookName = bookNameField.getText();
         String isbn = isbnField.getText();
-        boolean bookFlag = "".equals(bookName);
-        boolean isbnFlag = "".equals(isbn);
-        ObservableList<Book> result = books;
-        if (bookFlag && isbnFlag) {
-            return;
-        }else {
-            if (!bookFlag){
-                result = books.filtered(s -> s.getBookName().contains(bookName));
-            }
-            if (!isbnFlag) {
-                result = books.filtered(s -> s.getIsbn().contains(isbn));
-            }
-        }
+        Book book = new Book();
+        book.setBookName(bookName);
+        book.setIsbn(isbn);
+        List<Book> bookList = bookService.select(book);
 
-        books = new ObservableListWrapper<Book>(new ArrayList<Book>(result));
+        books = new ObservableListWrapper<Book>(new ArrayList<Book>(bookList));
         bookTableView.setItems(books);
     }
 

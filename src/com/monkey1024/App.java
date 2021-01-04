@@ -17,16 +17,16 @@
 
 package com.monkey1024;
 
-import com.monkey1024.bean.Admin;
-import com.monkey1024.global.Section;
-import com.monkey1024.global.AdminDetail;
-import com.monkey1024.global.plugin.SectionManager;
-import com.monkey1024.service.AdminService;
-import com.monkey1024.global.plugin.ViewManager;
 import com.gn.decorator.GNDecorator;
 import com.gn.decorator.options.ButtonType;
+import com.monkey1024.bean.Admin;
+import com.monkey1024.global.AdminDetail;
+import com.monkey1024.global.Section;
+import com.monkey1024.global.plugin.SectionManager;
+import com.monkey1024.global.plugin.ViewManager;
 import com.monkey1024.module.loader.Loader;
 import com.monkey1024.module.main.Main;
+import com.monkey1024.service.AdminService;
 import com.monkey1024.service.impl.AdminServiceImpl;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
@@ -41,12 +41,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Init the app class.
- * @author Gleidson Neves da Silveira | gleidisonmt@gmail.com
- * Create on  07/10/2018
- * Version 1.0
- */
+
 public class App extends Application {
 
     private float  increment = 0;

@@ -3,6 +3,8 @@ package com.monkey1024.module.book;
 import com.monkey1024.bean.Book;
 import com.monkey1024.bean.Constant;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.BookService;
+import com.monkey1024.service.impl.BookServiceImpl;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -40,6 +42,8 @@ public class BookHandleViewCtrl {
     //修改的book对象
     private Book book;
 
+    private BookService bookService = new BookServiceImpl();
+
     /*
         添加或修改数据
      */
@@ -52,6 +56,7 @@ public class BookHandleViewCtrl {
                 Book book = new Book();
                 populate(book);
                 book.setStatus(Constant.STATUS_STORAGE);
+                bookService.add(book);
                 books.add(book);
             }else {
                 //修改操作

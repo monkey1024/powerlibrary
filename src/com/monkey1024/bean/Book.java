@@ -1,11 +1,12 @@
 package com.monkey1024.bean;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /*
     Í¼Êé
  */
-public class Book {
+public class Book implements Serializable {
     //±àºÅ
     private int id;
     //ÊéÃû
@@ -108,4 +109,6 @@ public class Book {
         this.publisher = publisher;
         this.status = status;
     }
+
+
 }
