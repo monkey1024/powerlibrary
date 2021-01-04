@@ -61,6 +61,7 @@ public class BookHandleViewCtrl {
             }else {
                 //ÐÞ¸Ä²Ù×÷
                 populate(this.book);
+                bookService.update(book);
                 //Ë¢ÐÂ
                 bookTableView.refresh();
             }

@@ -108,11 +108,15 @@ public class BookViewCtrl implements Initializable {
                 Alerts.warning("未选择","请先选择要删除的数据");
                 return;
             }
-            this.books.remove(book);
-            Alerts.success("成功", "图书修改成功");
+            bookService.delete(book.getId());
+            List<Book> bookList = bookService.select(null);
+            books.clear();
+            books.addAll(bookList);
+            bookTableView.setItems(books);
+            Alerts.success("成功", "图书删除成功");
         } catch (Exception e) {
             e.printStackTrace();
-            Alerts.error("失败","图书修改失败");
+            Alerts.error("失败","图书删除失败");
         }
     }
 
