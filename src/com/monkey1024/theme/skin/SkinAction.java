@@ -17,7 +17,6 @@
 package com.monkey1024.theme.skin;
 
 import com.sun.javafx.scene.control.skin.TextFieldSkin;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;

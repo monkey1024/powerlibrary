@@ -93,7 +93,7 @@ public class BookDaoImpl implements BookDao {
     public List<Book> select(Book book) {
 
         try (
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("book/book.txt"))
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PathConstant.BOOK_PATH))
         ) {
             List<Book> list = (List<Book>) ois.readObject();
             if (list != null) {
@@ -106,6 +106,9 @@ public class BookDaoImpl implements BookDao {
                     }
                     if (!"".equals(book.getIsbn())){
                         conditionList = list.stream().filter(b -> b.getIsbn().equals(book.getIsbn())).collect(Collectors.toList());
+                    }
+                    if (0 != book.getId()) {
+                        conditionList = list.stream().filter(b -> b.getId() == book.getId()).collect(Collectors.toList());
                     }
                     return conditionList;
                 }

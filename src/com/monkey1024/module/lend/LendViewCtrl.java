@@ -1,11 +1,14 @@
 package com.monkey1024.module.lend;
 
 import com.gn.App;
-import com.monkey1024.bean.Book;
 import com.monkey1024.bean.Constant;
 import com.monkey1024.bean.Lend;
 import com.monkey1024.bean.User;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.LendService;
+import com.monkey1024.service.UserService;
+import com.monkey1024.service.impl.LendServiceImpl;
+import com.monkey1024.service.impl.UserServiceImpl;
 import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +30,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -53,6 +58,8 @@ public class LendViewCtrl implements Initializable {
     private TableColumn<Lend, String> c6;
     @FXML
     private TableColumn<Lend, String> c7;
+    @FXML
+    private TableColumn<Lend, String> c8;
 
     @FXML
     private TextField lendNameField;
@@ -62,27 +69,74 @@ public class LendViewCtrl implements Initializable {
 
     ObservableList<Lend> lends = FXCollections.observableArrayList();
 
+    private LendService lendService = new LendServiceImpl();
+    private UserService userService = new UserServiceImpl();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Book book = new Book(1, "java实战入门", "张三", Constant.TYPE_COMPUTER, "12-987", "XX出版社", Constant.STATUS_STORAGE);
-        User user = new User(1, "张三", "正常", new BigDecimal(("100")));
-        LocalDate now = LocalDate.now();
-        lends.add(new Lend(1,book,user, Constant.LEND_LEND, now,now.plusDays(30)));
 
-        c1.setCellValueFactory(new PropertyValueFactory<>("id"));
+        List<Lend> lendList = lendService.select(null);
+
+
+        //计算书籍逾期后的余额
+        lendList.forEach(d -> {
+            LocalDate returnDate = d.getReturnDate();
+            LocalDate now = LocalDate.now();
+
+            Period period = Period.between(returnDate, now);
+
+            User user = d.getUser();
+            BigDecimal money = user.getMoney();
+            BigDecimal delay = BigDecimal.ZERO;
+            if (period.getMonths() >= 1 || period.getDays() >= 1){
+                //计算滞纳金，超出一个月的按30天算
+                if (period.getMonths() >= 1) {
+                    delay = new BigDecimal("30");
+                }else if (period.getDays() >= 1){
+                    delay = new BigDecimal(period.getDays());
+
+                }
+
+                //扣款之后将归还日期改成今日
+                d.setReturnDate(now);
+
+                BigDecimal residue = money.subtract(delay);
+
+                user.setMoney(residue);
+                //判断余额是否小于0，小于0的话要修改用户状态
+                if (BigDecimal.ZERO.compareTo(residue) > 0) {
+                    user.setStatus(Constant.USER_FROZEN);
+                }
+
+                d.setUser(user);
+
+                userService.update(user);
+                lendService.update(d);
+            }
+
+        });
+
+
+        lends.addAll(lendList);
+
         //获取图书名称
-        c2.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
+        c1.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
             new SimpleObjectProperty(p.getValue().getBook().getBookName())
         );
-        c3.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
+        c2.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
                 new SimpleObjectProperty(p.getValue().getBook().getIsbn())
         );
-        c4.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
+        c3.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
                 new SimpleObjectProperty(p.getValue().getUser().getName())
         );
-        c5.setCellValueFactory(new PropertyValueFactory<>("lendDate"));
-        c6.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
-        c7.setCellValueFactory(new PropertyValueFactory<>("status"));
+        c4.setCellValueFactory(new PropertyValueFactory<>("lendDate"));
+        c5.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
+        c6.setCellValueFactory(new PropertyValueFactory<>("status"));
+        c7.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
+                new SimpleObjectProperty(p.getValue().getUser().getMoney())
+        );
+        c8.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         lendTableView.setItems(lends);
 
     }
@@ -93,23 +147,11 @@ public class LendViewCtrl implements Initializable {
      */
     @FXML
     private void lendSelect(){
-        String lendName = lendNameField.getText();
-        String isbn = isbnField.getText();
-        boolean lendFlag = "".equals(lendName);
-        boolean isbnFlag = "".equals(isbn);
-        ObservableList<Lend> result = lends;
-        if (lendFlag && isbnFlag) {
-            return;
-        }else {
-//            if (!lendFlag){
-//                result = lends.filtered(s -> s.getLendName().contains(lendName));
-//            }
-//            if (!isbnFlag) {
-//                result = lends.filtered(s -> s.getIsbn().contains(isbn));
-//            }
-        }
 
-        lends = new ObservableListWrapper<Lend>(new ArrayList<Lend>(result));
+
+        List<Lend> lendList = lendService.select(null);
+
+        lends = new ObservableListWrapper<Lend>(new ArrayList<Lend>(lendList));
         lendTableView.setItems(lends);
     }
 
@@ -118,13 +160,25 @@ public class LendViewCtrl implements Initializable {
      */
     @FXML
     private void returnBook(){
-        Lend lend = this.lendTableView.getSelectionModel().getSelectedItem();
-        if (lend == null){
-            Alerts.warning("未选择","请先选择要归还的书籍");
-            return;
+        try {
+            Lend lend = this.lendTableView.getSelectionModel().getSelectedItem();
+            if (lend == null){
+                Alerts.warning("未选择","请先选择要归还的书籍");
+                return;
+            }
+            if (BigDecimal.ZERO.compareTo(lend.getUser().getMoney()) > 0) {
+                Alerts.warning("滞纳金","请先缴纳滞纳金");
+                return;
+            }
+            List<Lend> lendList = lendService.returnBook(lend);
+            lends = new ObservableListWrapper<Lend>(new ArrayList<Lend>(lendList));
+            lendTableView.setItems(lends);
+
+            Alerts.success("成功","还书成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alerts.error("失败","还书失败");
         }
-        lend.setStatus(Constant.LEND_RETURN);
-        lend.setReturnDate(LocalDate.now());
     }
 
     /*

@@ -1,16 +1,32 @@
 package com.monkey1024.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 123456789L;
+
     private int id;
 
-    public User(int id, String name, String status, BigDecimal money) {
+    private String name;
+
+    //状态
+    private String status;
+
+    //余额
+    private BigDecimal money;
+
+    //是否借阅书籍
+    private boolean isLend;
+
+
+    public User(int id, String name, String status, BigDecimal money, boolean isLend) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.money = money;
+        this.isLend = isLend;
     }
 
     public int getId() {
@@ -45,21 +61,16 @@ public class User {
         this.money = money;
     }
 
-    private String name;
 
-    //状态
-    private String status;
-
-    //余额
-    private BigDecimal money;
 
     @Override
     public String toString() {
-        return "Admin{" +
-                "id='" + id + '\'' +
+        return "User{" +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", money=" + money +
+                ", isLend=" + isLend +
                 '}';
     }
 
@@ -68,7 +79,8 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
+        return id == user.id &&
+                isLend == user.isLend &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(status, user.status) &&
                 Objects.equals(money, user.money);
@@ -76,7 +88,15 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, status, money);
+        return Objects.hash(id, name, status, money, isLend);
+    }
+
+    public boolean isLend() {
+        return isLend;
+    }
+
+    public void setLend(boolean lend) {
+        isLend = lend;
     }
 
     public User() {

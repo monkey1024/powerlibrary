@@ -21,6 +21,10 @@ public class BeanPopulateUtil {
             Field[] fields = clazz.getDeclaredFields();
 
             for (Field f : fields) {
+                //ÅÅ³ýserialVersionUID
+                if ("serialVersionUID".equals(f.getName())){
+                    continue;
+                }
                 f.setAccessible(true);
                 //¸³Öµ
                 f.set(origin,f.get(dest));

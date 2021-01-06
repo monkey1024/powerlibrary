@@ -93,6 +93,10 @@ public class BookViewCtrl implements Initializable {
                 Alerts.warning("未选择","请先选择要借阅的书籍");
                 return;
             }
+            if (!Constant.STATUS_STORAGE.equals(book.getStatus())){
+                Alerts.warning("不能出借","该书籍已经被借阅");
+                return;
+            }
 
             initLendStage(book);
         } catch (IOException e) {
@@ -167,8 +171,8 @@ public class BookViewCtrl implements Initializable {
     }
 
     /*
-    初始化借阅stage
- */
+        初始化借阅stage
+     */
     private void initLendStage(Book book) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("/com/monkey1024/module/book/BookLendView.fxml"));
@@ -179,6 +183,7 @@ public class BookViewCtrl implements Initializable {
         BookLendViewCtrl controller = (BookLendViewCtrl)loader.getController();
         controller.setStage(stage);
         controller.setBook(book);
+        controller.setBookTableView(bookTableView);
         stage.setHeight(800);
         stage.setWidth(700);
         //设置窗口图标

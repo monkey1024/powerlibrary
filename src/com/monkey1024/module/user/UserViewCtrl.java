@@ -4,6 +4,9 @@ import com.gn.App;
 import com.monkey1024.bean.Constant;
 import com.monkey1024.bean.User;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.UserService;
+import com.monkey1024.service.impl.UserServiceImpl;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,8 +22,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -40,19 +43,24 @@ public class UserViewCtrl implements Initializable {
     private TableColumn<User, String> c3;
     @FXML
     private TableColumn<User, String> c4;
+    @FXML
+    private TableColumn<User, String> c5;
+
+    private UserService userService = new UserServiceImpl();
 
     ObservableList<User> users = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        users.add(new User(1, "张三", "正常", new BigDecimal(("100"))));
-        users.add(new User(2, "李四", "正常", new BigDecimal(("100"))));
-        users.add(new User(3, "王五", "正常", new BigDecimal(("100"))));
+        List<User> userList = userService.select(null);
+        users.addAll(userList);
         c1.setCellValueFactory(new PropertyValueFactory<>("id"));
         c2.setCellValueFactory(new PropertyValueFactory<>("name"));
         c3.setCellValueFactory(new PropertyValueFactory<>("money"));
         c4.setCellValueFactory(new PropertyValueFactory<>("status"));
+        c5.setCellValueFactory((TableColumn.CellDataFeatures<User, String> p) ->
+                new SimpleObjectProperty(p.getValue().isLend() ? "是":"否"));
         userTableView.setItems(users);
 
     }
@@ -65,6 +73,7 @@ public class UserViewCtrl implements Initializable {
                 Alerts.warning("未选择","请先选择要删除的数据");
                 return;
             }
+            userService.delete(user.getId());
             this.users.remove(user);
             Alerts.success("成功", "操作成功");
         } catch (Exception e) {
@@ -97,6 +106,7 @@ public class UserViewCtrl implements Initializable {
             Alerts.warning("未选择","请先选择要修改的数据");
             return;
         }
+        userService.frozen(user.getId());
         user.setStatus(Constant.USER_FROZEN);
         userTableView.refresh();
     }

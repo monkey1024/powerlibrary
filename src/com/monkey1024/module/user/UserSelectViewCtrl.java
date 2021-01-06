@@ -3,6 +3,8 @@ package com.monkey1024.module.user;
 import com.monkey1024.bean.User;
 import com.monkey1024.global.util.Alerts;
 import com.monkey1024.module.book.BookLendViewCtrl;
+import com.monkey1024.service.UserService;
+import com.monkey1024.service.impl.UserServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,8 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -36,12 +38,12 @@ public class UserSelectViewCtrl implements Initializable {
 
     private BookLendViewCtrl bookLendViewCtrl;
 
+    private UserService userService = new UserServiceImpl();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        users.add(new User(1, "张三", "正常", new BigDecimal(("100"))));
-        users.add(new User(2, "李四", "正常", new BigDecimal(("100"))));
-        users.add(new User(3, "王五", "正常", new BigDecimal(("100"))));
+        List<User> userList = userService.selectUserToLend();
+        users.addAll(userList);
         c1.setCellValueFactory(new PropertyValueFactory<>("id"));
         c2.setCellValueFactory(new PropertyValueFactory<>("name"));
         userTableView.setItems(users);

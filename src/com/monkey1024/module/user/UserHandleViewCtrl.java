@@ -3,6 +3,8 @@ package com.monkey1024.module.user;
 import com.monkey1024.bean.Constant;
 import com.monkey1024.bean.User;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.UserService;
+import com.monkey1024.service.impl.UserServiceImpl;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
@@ -32,6 +34,8 @@ public class UserHandleViewCtrl {
     //修改的user对象
     private User user;
 
+    private UserService userService = new UserServiceImpl();
+
     /*
         添加或修改数据
      */
@@ -45,10 +49,13 @@ public class UserHandleViewCtrl {
                 populate(user);
                 //设置状态为正常
                 user.setStatus(Constant.USER_OK);
+                userService.add(user);
                 users.add(user);
             }else {
                 //修改操作
                 populate(this.user);
+                userService.update(user);
+
                 //刷新
                 userTableView.refresh();
             }

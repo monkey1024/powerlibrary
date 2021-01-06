@@ -39,6 +39,8 @@
                                         </TableColumn>
                                         <TableColumn fx:id="c4" text="状态">
                                         </TableColumn>
+                                        <TableColumn fx:id="c5" text="是否借阅">
+                                        </TableColumn>
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

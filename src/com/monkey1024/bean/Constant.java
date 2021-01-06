@@ -14,6 +14,8 @@ public class Constant {
      */
     public static final String STATUS_STORAGE = "入库";
     public static final String STATUS_LEND = "出借";
+    public static final String STATUS_OVERDUE = "逾期";
+
 
     /*
         用户状态
@@ -21,11 +23,7 @@ public class Constant {
     public static final String USER_OK = "正常";
     public static final String USER_FROZEN = "冻结";
 
-    /*
-        借阅状态
-     */
-    public static final String LEND_RETURN = "归还";
-    public static final String LEND_LEND = "借出";
+
 
 
 

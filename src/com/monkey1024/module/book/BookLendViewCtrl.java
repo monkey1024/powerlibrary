@@ -3,12 +3,15 @@ package com.monkey1024.module.book;
 import com.gn.App;
 import com.monkey1024.bean.Book;
 import com.monkey1024.bean.Constant;
-import com.monkey1024.bean.Lend;
 import com.monkey1024.bean.User;
+import com.monkey1024.global.util.Alerts;
 import com.monkey1024.module.user.UserSelectViewCtrl;
+import com.monkey1024.service.LendService;
+import com.monkey1024.service.impl.LendServiceImpl;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
@@ -16,7 +19,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 
 public class BookLendViewCtrl {
@@ -41,6 +43,10 @@ public class BookLendViewCtrl {
     //借阅者
     private User user;
 
+    private TableView<Book> bookTableView;
+
+    private LendService lendService = new LendServiceImpl();
+
 
     @FXML
     private void closeView() {
@@ -49,15 +55,20 @@ public class BookLendViewCtrl {
 
     @FXML
     private void add() {
-        Lend lend = new Lend();
-        LocalDate now = LocalDate.now();
-        lend.setId(5);
-        lend.setLendDate(now);
-        lend.setReturnDate(now.plusDays(30));
-        lend.setStatus(Constant.LEND_LEND);
-
-        stage.close();
+        try {
+            lendService.add(Integer.parseInt(bookIdField.getText()),Integer.parseInt(userIdField.getText()));
+            book.setStatus(Constant.STATUS_LEND);
+            user.setLend(true);
+            stage.close();
+            bookTableView.refresh();
+            Alerts.success("成功", "操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alerts.error("失败","操作失败");
+        }
     }
+
+
 
     /*
         初始化借阅用户选择的stage
@@ -108,5 +119,13 @@ public class BookLendViewCtrl {
         this.user = user;
         userIdField.setText(String.valueOf(user.getId()));
         userNameField.setText(user.getName());
+    }
+
+    public TableView<Book> getBookTableView() {
+        return bookTableView;
+    }
+
+    public void setBookTableView(TableView<Book> bookTableView) {
+        this.bookTableView = bookTableView;
     }
 }

@@ -1,8 +1,9 @@
 package com.monkey1024.module.user;
 
-import com.monkey1024.bean.Constant;
 import com.monkey1024.bean.User;
 import com.monkey1024.global.util.Alerts;
+import com.monkey1024.service.UserService;
+import com.monkey1024.service.impl.UserServiceImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -21,26 +22,26 @@ public class UserChargeViewCtrl {
 
     private TableView<User> userTableView;
 
+    private UserService userService = new UserServiceImpl();
+
     /*
         充值
      */
     @FXML
     private void charge() {
         try {
-            //获取充值之前的余额
-            BigDecimal before = user.getMoney();
             //本次充值的金额
             BigDecimal money = new BigDecimal(moneyField.getText());
-            //计算充值之后余额是否大于0
-            BigDecimal after = before.add(money);
 
-            if (after.compareTo(BigDecimal.ZERO) >= 0) {
-                //修改用户状态
-                user.setStatus(Constant.USER_OK);
-            }
+            User returnUser = userService.charge(user.getId(), money);
+
+            user.setStatus(returnUser.getStatus());
+            user.setMoney(returnUser.getMoney());
+
             userTableView.refresh();
             stage.close();
             Alerts.success("成功", "操作成功");
+
         } catch (Exception e) {
             e.printStackTrace();
             Alerts.error("失败","操作失败");

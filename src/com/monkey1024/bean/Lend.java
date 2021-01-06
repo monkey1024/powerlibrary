@@ -1,13 +1,17 @@
 package com.monkey1024.bean;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /*
     借书
  */
-public class Lend {
-    private int id;
+public class Lend implements Serializable {
+
+    private static final long serialVersionUID = 123456789L;
+
+    private String id;
 
     //借出的书籍
     private Book book;
@@ -43,13 +47,7 @@ public class Lend {
         return Objects.hash(id, book, user, status, lendDate, returnDate);
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Book getBook() {
         return book;
@@ -94,12 +92,20 @@ public class Lend {
     public Lend() {
     }
 
-    public Lend(int id, Book book, User user, String status, LocalDate lendDate, LocalDate returnDate) {
+    public Lend(String id, Book book, User user, String status, LocalDate lendDate, LocalDate returnDate) {
         this.id = id;
         this.book = book;
         this.user = user;
         this.status = status;
         this.lendDate = lendDate;
         this.returnDate = returnDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
