@@ -85,8 +85,8 @@ public class Account implements Initializable {
             String user = username.getText();
             String extension = "properties";
 
-            File directory = new File("user/");
-            File file = new File("user/" + user + "." + extension);
+            File directory = new File("admin/");
+            File file = new File("admin/" + user + "." + extension);
 
             if (!directory.exists()) {
                 directory.mkdir();
