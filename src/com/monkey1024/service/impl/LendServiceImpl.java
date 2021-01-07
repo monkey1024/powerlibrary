@@ -66,7 +66,7 @@ public class LendServiceImpl implements LendService {
         //设置借书日期和归还日期
         LocalDate begin = LocalDate.now();
         lend.setLendDate(begin);
-        lend.setReturnDate(begin.of(2020,12,20));
+        lend.setReturnDate(begin.plusDays(30));
 
         //设置状态
         lend.setStatus(Constant.STATUS_LEND);
