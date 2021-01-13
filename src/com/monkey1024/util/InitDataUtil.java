@@ -94,7 +94,6 @@ public class InitDataUtil {
                 }else {
                     list = userList;
                 }
-
                 oos = new ObjectOutputStream(new FileOutputStream(PathConstant.USER_PATH));
                 oos.writeObject(list);
 

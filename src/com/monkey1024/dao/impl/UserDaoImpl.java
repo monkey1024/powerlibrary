@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 public class UserDaoImpl implements UserDao {
 
     /**
-     *  添加用户
+     * 添加用户
+     *
      * @param user
      */
     @Override
@@ -37,11 +38,23 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
             //向上层抛出异常信息
             throw new RuntimeException("添加用户出问题了");
+        } finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (oos != null) {
+                    oos.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * 修改用户
+     *
      * @param user
      */
     @Override
@@ -61,11 +74,23 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
             //向上层抛出异常信息
             throw new RuntimeException("修改用户出问题了");
+        }finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (oos != null) {
+                    oos.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * 删除用户
+     *
      * @param id
      */
     @Override
@@ -85,11 +110,23 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
             //向上层抛出异常信息
             throw new RuntimeException("删除用户出问题了");
+        }finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (oos != null) {
+                    oos.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     /**
-     *  查询用户
+     * 查询用户
+     *
      * @param user
      * @return
      */
@@ -104,7 +141,7 @@ public class UserDaoImpl implements UserDao {
                     return list;
                 } else {
                     List<User> conditionList = new ArrayList<>();
-                    if (!"".equals(user.getId()) && 0 != user.getId()){
+                    if (!"".equals(user.getId()) && 0 != user.getId()) {
                         conditionList = list.stream().filter(u -> u.getId() == user.getId()).collect(Collectors.toList());
                     }
                     return conditionList;
@@ -121,6 +158,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * 查询用户状态正常且未借书的数据
+     *
      * @return
      */
     @Override
@@ -145,10 +183,11 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * 充值
+     *
      * @param money
      */
     @Override
-    public void charge(int id,BigDecimal money) {
+    public void charge(int id, BigDecimal money) {
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
         try {
@@ -165,11 +204,23 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
             //向上层抛出异常信息
             throw new RuntimeException("充值用户出问题了");
+        }finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (oos != null) {
+                    oos.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
     /**
      * 冻结
+     *
      * @param id
      */
     @Override
@@ -189,6 +240,17 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
             //向上层抛出异常信息
             throw new RuntimeException("冻结用户出问题了");
+        }finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (oos != null) {
+                    oos.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 }
