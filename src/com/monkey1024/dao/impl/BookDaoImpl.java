@@ -101,15 +101,21 @@ public class BookDaoImpl implements BookDao {
                     return list;
                 } else {
                     List<Book> conditionList = new ArrayList<>();
-                    if (!"".equals(book.getBookName()) ){
+                    if (!"".equals(book.getBookName()) && !"".equals(book.getIsbn())) {
                         conditionList = list.stream().filter(b -> b.getBookName().equals(book.getBookName())).collect(Collectors.toList());
+                        conditionList = conditionList.stream().filter(b -> b.getIsbn().equals(book.getIsbn())).collect(Collectors.toList());
+                    }else {
+                        if (!"".equals(book.getBookName()) ){
+                            conditionList = list.stream().filter(b -> b.getBookName().equals(book.getBookName())).collect(Collectors.toList());
+                        }
+                        if (!"".equals(book.getIsbn())){
+                            conditionList = list.stream().filter(b -> b.getIsbn().equals(book.getIsbn())).collect(Collectors.toList());
+                        }
+                        if (0 != book.getId()) {
+                            conditionList = list.stream().filter(b -> b.getId() == book.getId()).collect(Collectors.toList());
+                        }
                     }
-                    if (!"".equals(book.getIsbn())){
-                        conditionList = list.stream().filter(b -> b.getIsbn().equals(book.getIsbn())).collect(Collectors.toList());
-                    }
-                    if (0 != book.getId()) {
-                        conditionList = list.stream().filter(b -> b.getId() == book.getId()).collect(Collectors.toList());
-                    }
+
                     return conditionList;
                 }
             }
