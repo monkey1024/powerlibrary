@@ -16,7 +16,6 @@ public interface UserDao {
 
     List<User> selectUserToLend();
 
-    void charge(int id,BigDecimal money);
 
     void frozen(int id);
 

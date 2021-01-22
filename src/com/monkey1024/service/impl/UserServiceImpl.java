@@ -62,12 +62,11 @@ public class UserServiceImpl implements UserService {
             //修改用户状态
             user.setStatus(Constant.USER_OK);//解冻
             user.setMoney(sum);
-            userDao.update(user);
         }else {
             //充值之后余额仍然小于0，不能解冻
             user.setMoney(sum);
-            userDao.update(user);
         }
+        userDao.update(user);
 
         //将充值之后的数据同步到lendList集合中
         List<Lend> lendList = lendDao.select(null);

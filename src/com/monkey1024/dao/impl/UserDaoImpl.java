@@ -181,42 +181,7 @@ public class UserDaoImpl implements UserDao {
         return new ArrayList<User>();
     }
 
-    /**
-     * 充值
-     *
-     * @param money
-     */
-    @Override
-    public void charge(int id, BigDecimal money) {
-        ObjectInputStream ois = null;
-        ObjectOutputStream oos = null;
-        try {
-            ois = new ObjectInputStream(new FileInputStream(PathConstant.USER_PATH));
-            List<User> list = (List<User>) ois.readObject();
-            if (list != null) {
-                User originUser = list.stream().filter(u -> u.getId() == id).findFirst().get();
-                BigDecimal sum = originUser.getMoney().add(money);
-                originUser.setMoney(sum);
-                oos = new ObjectOutputStream(new FileOutputStream(PathConstant.USER_PATH));
-                oos.writeObject(list);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //向上层抛出异常信息
-            throw new RuntimeException("充值用户出问题了");
-        }finally {
-            try {
-                if (ois != null) {
-                    ois.close();
-                }
-                if (oos != null) {
-                    oos.close();
-                }
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     /**
      * 冻结
