@@ -47,7 +47,7 @@ public class LendViewCtrl implements Initializable {
     @FXML
     private TableColumn<Lend, String> c1;
     @FXML
-    private TableColumn<Lend,String> c2;
+    private TableColumn<Lend, String> c2;
     @FXML
     private TableColumn<Lend, String> c3;
     @FXML
@@ -74,25 +74,20 @@ public class LendViewCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         List<Lend> lendList = lendService.select(null);
-
-
         //计算书籍逾期后的余额
         lendList.forEach(d -> {
             LocalDate returnDate = d.getReturnDate();
             LocalDate now = LocalDate.now();
-
             Period period = Period.between(returnDate, now);
-
             User user = d.getUser();
             BigDecimal money = user.getMoney();
-            BigDecimal delay = BigDecimal.ZERO;
-            if (period.getMonths() >= 1 || period.getDays() >= 1){
+            BigDecimal delay;
+            if (period.getDays() >= 1) {
                 //计算滞纳金，超出一个月的按30天算
-                if (period.getMonths() >= 1) {
+                if (period.getDays() >= 30) {
                     delay = new BigDecimal("30");
-                }else if (period.getDays() >= 1){
+                } else {
                     delay = new BigDecimal(period.getDays());
 
                 }
@@ -121,7 +116,7 @@ public class LendViewCtrl implements Initializable {
 
         //获取图书名称
         c1.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
-            new SimpleObjectProperty(p.getValue().getBook().getBookName())
+                new SimpleObjectProperty(p.getValue().getBook().getBookName())
         );
         c2.setCellValueFactory((TableColumn.CellDataFeatures<Lend, String> p) ->
                 new SimpleObjectProperty(p.getValue().getBook().getIsbn())
@@ -146,7 +141,7 @@ public class LendViewCtrl implements Initializable {
         查询
      */
     @FXML
-    private void lendSelect(){
+    private void lendSelect() {
 
 
         List<Lend> lendList = lendService.select(null);
@@ -159,25 +154,25 @@ public class LendViewCtrl implements Initializable {
         还书
      */
     @FXML
-    private void returnBook(){
+    private void returnBook() {
         try {
             Lend lend = this.lendTableView.getSelectionModel().getSelectedItem();
-            if (lend == null){
-                Alerts.warning("未选择","请先选择要归还的书籍");
+            if (lend == null) {
+                Alerts.warning("未选择", "请先选择要归还的书籍");
                 return;
             }
             if (BigDecimal.ZERO.compareTo(lend.getUser().getMoney()) > 0) {
-                Alerts.warning("滞纳金","请先缴纳滞纳金");
+                Alerts.warning("滞纳金", "请先缴纳滞纳金");
                 return;
             }
             List<Lend> lendList = lendService.returnBook(lend);
             lends = new ObservableListWrapper<Lend>(new ArrayList<Lend>(lendList));
             lendTableView.setItems(lends);
 
-            Alerts.success("成功","还书成功");
+            Alerts.success("成功", "还书成功");
         } catch (Exception e) {
             e.printStackTrace();
-            Alerts.error("失败","还书失败");
+            Alerts.error("失败", "还书失败");
         }
     }
 
@@ -185,10 +180,10 @@ public class LendViewCtrl implements Initializable {
         续借
      */
     @FXML
-    private void renew(){
+    private void renew() {
         Lend lend = this.lendTableView.getSelectionModel().getSelectedItem();
-        if (lend == null){
-            Alerts.warning("未选择","请先选择要续借的书籍");
+        if (lend == null) {
+            Alerts.warning("未选择", "请先选择要续借的书籍");
             return;
         }
         lend.setReturnDate(LocalDate.now().plusDays(30));
@@ -207,7 +202,7 @@ public class LendViewCtrl implements Initializable {
 
 
         Stage stage = new Stage();//创建舞台；
-        LendHandleViewCtrl controller = (LendHandleViewCtrl)loader.getController();
+        LendHandleViewCtrl controller = (LendHandleViewCtrl) loader.getController();
         controller.setStage(stage);
         controller.setLends(lends);
         controller.setLend(lend);
